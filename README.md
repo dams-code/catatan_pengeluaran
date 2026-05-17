@@ -1,6 +1,6 @@
 # Sistem Catatan Pengeluaran Damar
 
-Aplikasi web sederhana berbasis Django untuk mencatat pengeluaran harian.
+Aplikasi web sederhana untuk mencatat pengeluaran harian.
 
 ## Fitur
 
@@ -15,6 +15,11 @@ Aplikasi web sederhana berbasis Django untuk mencatat pengeluaran harian.
 - Python
 - Django
 - SQLite
+
+## Hak Cipta
+
+Project ini dibuat untuk keperluan pribadi/pembelajaran.  
+Kode program tidak boleh disalin, digunakan ulang, atau didistribusikan tanpa izin dari pemilik repository.
 
 ## Cara Menjalankan Project
 
