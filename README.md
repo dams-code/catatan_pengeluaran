@@ -9,13 +9,36 @@ Aplikasi web sederhana untuk mencatat pengeluaran harian.
 ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
 
 
-## Fitur
+## Fitur Utama
 
-- Menambah data pengeluaran
-- Melihat daftar pengeluaran
-- Mengubah data pengeluaran
-- Menghapus data pengeluaran
-- Mengelola kategori pengeluaran
+### Autentikasi User
+- Registrasi akun
+- Login dan logout
+- Data pengeluaran tersimpan berdasarkan user masing-masing
+
+### Manajemen Pengeluaran
+- Tambah pengeluaran harian
+- Edit pengeluaran hari ini
+- Hapus pengeluaran hari ini
+- Lihat riwayat pengeluaran tanggal sebelumnya
+- Riwayat lama hanya dapat dilihat
+
+### Dashboard
+- Menampilkan daftar tanggal pengeluaran
+- Menampilkan total pengeluaran harian
+- Menampilkan tren pengeluaran 7 hari terakhir
+- Menampilkan status pengeluaran harian
+
+### Analisis Pengeluaran
+- Total pengeluaran per kategori
+- Grafik pengeluaran per kategori
+- Grafik pengeluaran per item
+- Grafik tren pengeluaran mingguan
+
+### Kontrol Pengeluaran
+- Atur batas pengeluaran harian
+- Status otomatis: Aman, Boros, atau Belum Set Batas
+- Catatan/ringkasan pengeluaran harian
 
 ## Teknologi
 
