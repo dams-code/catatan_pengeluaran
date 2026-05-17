@@ -1,0 +1,95 @@
+{% extends "transaksi/base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-0">Daftar Pengeluaran</h3>
+        <p class="text-muted mb-0">Data pengeluaran harian kamu.</p>
+    </div>
+
+    <a href="{% url 'tambah_pengeluaran' %}" class="btn btn-primary">
+        + Tambah Pengeluaran
+    </a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Total Pengeluaran per Kategori</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            {% for item in total_per_kategori %}
+            <div class="col-md-4 mb-3">
+                <div class="border rounded p-3 bg-light">
+                    <h6 class="mb-1">
+                        {{ item.kategori__nama|default:"Tanpa Kategori" }}
+                    </h6>
+                    <h5 class="mb-0">
+                        Rp {{ item.total }}
+                    </h5>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted mb-0">Belum ada data kategori.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-primary">
+    <strong>Total Semua Pengeluaran:</strong> Rp {{ total_semua }}
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                        <th>Metode</th>
+                        <th>Catatan</th>
+                        <th width="130">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in data_pengeluaran %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        {% comment %} <td>{{ item.tanggal }}</td> {% endcomment %}
+                        <td>{{ item.tanggal|date:"d F Y" }}</td>
+                        <td>{{ item.judul }}</td>
+                        <td>{{ item.kategori }}</td>
+                        <td>Rp {{ item.jumlah }}</td>
+                        <td>{{ item.get_metode_pembayaran_display }}</td>
+                        <td>{{ item.catatan|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'edit_pengeluaran' item.id %}" class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+                            <a href="{% url 'hapus_pengeluaran' item.id %}" class="btn btn-sm btn-danger">
+                                Hapus
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">
+                            Belum ada data pengeluaran.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

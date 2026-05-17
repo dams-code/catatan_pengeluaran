@@ -1,0 +1,57 @@
+{% extends "transaksi/base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">{{ judul }}</h5>
+            </div>
+
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        {{ form.kategori }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Judul</label>
+                        {{ form.judul }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Uang</label>
+                        {{ form.jumlah }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        {% comment %} {{ form.tanggal }} {% endcomment %}
+                        <input type="text" class="form-control" value="{{ hari_ini|date:'d F Y' }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Metode Pembayaran</label>
+                        {{ form.metode_pembayaran }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Catatan</label>
+                        {{ form.catatan }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Batal</a>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

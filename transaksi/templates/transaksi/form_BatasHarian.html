@@ -1,0 +1,43 @@
+{% extends "transaksi/base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Atur Batas Pengeluaran Harian</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-info">
+                    Batas ini untuk tanggal <strong>{{ hari_ini|date:"d F Y" }}</strong>.
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Batas</label>
+                        {{ form.jumlah_batas }}
+                        <small class="text-muted">
+                            Contoh: 100000 untuk Rp 100.000
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Simpan Batas
+                    </button>
+
+                    <a href="{% url 'detail_pengeluaran_tanggal' hari_ini|date:'Y-m-d' %}" class="btn btn-secondary">
+                        Batal
+                    </a>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

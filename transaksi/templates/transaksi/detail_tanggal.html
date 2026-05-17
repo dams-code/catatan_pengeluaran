@@ -1,0 +1,326 @@
+{% extends "transaksi/base.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="mb-0">
+            Pengeluaran {{ tanggal_dipilih|date:"d F Y" }}
+        </h3>
+
+        {% if boleh_ubah %}
+            <p class="text-muted mb-0">Data hari ini dapat ditambah, diedit, dan dihapus.</p>
+        {% else %}
+            <p class="text-muted mb-0">Data lama hanya dapat dilihat.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+            Kembali
+        </a>
+
+        {% if boleh_ubah %}
+        <a href="{% url 'tambah_pengeluaran' %}" class="btn btn-primary">
+            + Tambah Pengeluaran
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% comment %} <div class="alert alert-primary">
+    <strong>Total Pengeluaran:</strong> Rp {{ total_pengeluaran }}
+</div> {% endcomment %}
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-primary">
+            <div class="card-body">
+                <p class="text-muted mb-1">Total Pengeluaran</p>
+                <h4 class="mb-0">Rp {{ total_pengeluaran }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-warning">
+            <div class="card-body">
+                <p class="text-muted mb-1">Batas Harian</p>
+
+                {% if batas_harian %}
+                    <h4 class="mb-0">Rp {{ batas_harian.jumlah_batas }}</h4>
+                {% else %}
+                    <h5 class="mb-0 text-muted">Belum diatur</h5>
+                {% endif %}
+
+                {% if boleh_ubah %}
+                    <a href="{% url 'batas_pengeluaran_harian' %}" class="btn btn-sm btn-outline-warning mt-3">
+                        Atur Batas
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-{{ status_class }}">
+            <div class="card-body">
+                <p class="text-muted mb-1">Status</p>
+                <h4 class="mb-0 text-{{ status_class }}">
+                    {{ status_pengeluaran }}
+                </h4>
+
+                {% if batas_harian %}
+                    {% if status_pengeluaran == "Boros" %}
+                        <small class="text-muted">
+                            Total pengeluaran sudah melewati batas harian.
+                        </small>
+                    {% else %}
+                        <small class="text-muted">
+                            Pengeluaran masih dalam batas aman.
+                        </small>
+                    {% endif %}
+                {% else %}
+                    <small class="text-muted">
+                        Atur batas harian untuk melihat status.
+                    </small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Ringkasan Hari Ini</h5>
+
+        {% if boleh_ubah %}
+            <a href="{% url 'set_catatan_harian' %}" class="btn btn-sm btn-light">
+                {% if catatan_harian %}Edit Catatan{% else %}Tambah Catatan{% endif %}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="card-body">
+        {% if catatan_harian and catatan_harian.catatan %}
+            <p class="mb-0">
+                {{ catatan_harian.catatan|linebreaks }}
+            </p>
+        {% else %}
+            <p class="text-muted mb-0">
+                Belum ada ringkasan untuk tanggal ini.
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+{% if data_pengeluaran %}
+<div class="row mb-4">
+    <div class="col-md-5 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Grafik per Kategori</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="kategoriChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7 mb-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Grafik per Pengeluaran</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="pengeluaranChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Total per Kategori</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            {% for item in total_per_kategori %}
+            <div class="col-md-4 mb-3">
+                <div class="border rounded p-3 bg-light">
+                    <h6 class="mb-1">
+                        {{ item.kategori__nama|default:"Tanpa Kategori" }}
+                    </h6>
+                    <h5 class="mb-0">
+                        Rp {{ item.total }}
+                    </h5>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted mb-0">Belum ada data kategori.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Daftar Pengeluaran</h5>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                        <th>Metode</th>
+                        <th>Catatan</th>
+                        {% if boleh_ubah %}
+                        <th width="140">Aksi</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in data_pengeluaran %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.judul }}</td>
+                        <td>{{ item.kategori }}</td>
+                        <td>Rp {{ item.jumlah }}</td>
+                        <td>{{ item.get_metode_pembayaran_display }}</td>
+                        <td>{{ item.catatan|default:"-" }}</td>
+
+                        {% if boleh_ubah %}
+                        <td>
+                            <a href="{% url 'edit_pengeluaran' item.id %}" class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+                            <a href="{% url 'hapus_pengeluaran' item.id %}" class="btn btn-sm btn-danger">
+                                Hapus
+                            </a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="{% if boleh_ubah %}7{% else %}6{% endif %}" class="text-center text-muted">
+                            Belum ada data pengeluaran.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{{ chart_kategori_label|json_script:"chart-kategori-labels" }}
+{{ chart_kategori_data|json_script:"chart-kategori-data" }}
+{{ chart_pengeluaran_label|json_script:"chart-pengeluaran-labels" }}
+{{ chart_pengeluaran_data|json_script:"chart-pengeluaran-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+
+<script>
+    const kategoriLabel = JSON.parse($("#chart-kategori-labels").text());
+    const kategoriData = JSON.parse($("#chart-kategori-data").text());
+    const pengeluaranLabel = JSON.parse($("#chart-pengeluaran-labels").text());
+    const pengeluaranData = JSON.parse($("#chart-pengeluaran-data").text());
+
+    const formatRupiah = function(value){
+        return "Rp " + Number(value).toLocaleString("id-ID");
+    };
+
+    const kategoriCanvas = $("#kategoriChart");
+
+    if(kategoriCanvas.length){
+        new Chart(kategoriCanvas[0], {
+            type: "doughnut",
+            data: {
+                labels: kategoriLabel,
+                datasets: [{
+                    label: "Total Pengeluaran",
+                    data: kategoriData,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context){
+                                return context.label + ": " + formatRupiah(context.raw);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const pengeluaranCanvas = $("#pengeluaranChart");
+
+    if(pengeluaranCanvas.length){
+        new Chart(pengeluaranCanvas[0], {
+            type: "bar",
+            data: {
+                labels: pengeluaranLabel,
+                datasets: [{
+                    label: "Jumlah Pengeluaran",
+                    data: pengeluaranData,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatRupiah(value);
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return formatRupiah(context.raw);
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+</script>
+
+{% endblock %}

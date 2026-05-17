@@ -1,0 +1,40 @@
+{% extends "transaksi/base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Ringkasan Hari Ini</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-info">
+                    Catatan ini untuk tanggal <strong>{{ hari_ini|date:"d F Y" }}</strong>.
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Apa saja pengeluaran atau aktivitas hari ini?</label>
+                        {{ form.catatan }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Simpan Catatan
+                    </button>
+
+                    <a href="{% url 'detail_pengeluaran_tanggal' hari_ini|date:'Y-m-d' %}" class="btn btn-secondary">
+                        Batal
+                    </a>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
