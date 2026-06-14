@@ -46,10 +46,7 @@ Aplikasi web sederhana untuk mencatat pengeluaran harian.
 - Django
 - SQLite
 
-## Hak Cipta
-
-Project ini dibuat untuk keperluan pribadi/pembelajaran.  
-Kode program tidak boleh disalin, digunakan ulang, atau didistribusikan tanpa izin dari pemilik repository.
+**<i>Kode program tidak boleh disalin, digunakan ulang, atau didistribusikan tanpa izin dari pemilik repository.</i>**
 
 ## Cara Menjalankan Project
 
