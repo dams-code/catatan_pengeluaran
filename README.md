@@ -55,3 +55,13 @@ Kode program tidak boleh disalin, digunakan ulang, atau didistribusikan tanpa iz
 
 ```bash
 python manage.py runserver
+```
+
+## Copyright Personal Portfolio
+* **Project Owner / Created By:** Damar Djati Wahyu Kemala
+* **Role:** Learn Back-end with Python
+* **Date Created:** Mei 2026
+* **GitHub Portfolio:** [https://github.com/dams-code](https://github.com/dams-code)
+
+---
+*© 2026 Damar Djati Wahyu Kemala. This project is a part of my professional python portfolio. Authorization is required for commercial use or modification.*
